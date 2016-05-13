@@ -4,7 +4,7 @@ typings
 
 *.js
 *.js.map
-!system.config.js
+!systemjs.config.js
 
 # IDE #
 .idea/
