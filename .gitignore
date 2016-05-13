@@ -1,0 +1,10 @@
+npm-debug.log
+node_modules
+typings
+
+*.js
+*.js.map
+!system.config.js
+
+# IDE #
+.idea/
