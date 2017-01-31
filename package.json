@@ -2,7 +2,7 @@
   "name": "angular2-quickstart",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "start": "rimraf dist && tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "tsc": "tsc",
     "tsc:w": "tsc -w"
@@ -14,11 +14,11 @@
     "@angular/core": "4.0.0-beta.3",
     "@angular/forms": "4.0.0-beta.3",
     "@angular/http": "4.0.0-beta.3",
+    "@angular/material": "^2.0.0-beta.1",
     "@angular/platform-browser": "4.0.0-beta.3",
     "@angular/platform-browser-dynamic": "4.0.0-beta.3",
     "@angular/router": "4.0.0-beta.3",
     "@angular/upgrade": "4.0.0-beta.3",
-
     "core-js": "^2.4.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "^5.0.1",
@@ -30,6 +30,7 @@
     "@types/node": "^6.0.45",
     "concurrently": "^3.0.0",
     "lite-server": "^2.2.2",
+    "rimraf": "^2.5.4",
     "typescript": "2.0.3"
   }
 }
