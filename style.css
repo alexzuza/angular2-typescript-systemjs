@@ -4,11 +4,10 @@ my-app {
   height: 100%;
 }
 
-
 body {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   color: #555;
-  -webkit-font-smoothing:antialiased;
+  margin: 0;
 }
 
 a {
@@ -42,15 +41,26 @@ button {
 
 button:hover { cursor: pointer; }
 
-
-body {
-  margin: 0;
-}
-
 my-app {
   display: block;
   display: flex;
   flex-flow: column;
+}
+
+loader {
+  display: block;
+  height: 100%;
+  position: relative;
+  background: #333;
+}
+
+loader:after {
+  content: 'Loading app. Please waiting...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
 }
 
 .top {
