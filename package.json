@@ -9,20 +9,20 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@angular/common": "4.0.0-beta.6",
-    "@angular/compiler": "4.0.0-beta.6",
-    "@angular/core": "4.0.0-beta.6",
-    "@angular/forms": "4.0.0-beta.6",
-    "@angular/http": "4.0.0-beta.6",
-    "@angular/platform-browser": "4.0.0-beta.6",
-    "@angular/platform-browser-dynamic": "4.0.0-beta.6",
-    "@angular/router": "4.0.0-beta.6",
+    "@angular/common": "4.0.0-beta.7",
+    "@angular/compiler": "4.0.0-beta.7",
+    "@angular/core": "4.0.0-beta.7",
+    "@angular/forms": "4.0.0-beta.7",
+    "@angular/http": "4.0.0-beta.7",
+    "@angular/platform-browser": "4.0.0-beta.7",
+    "@angular/platform-browser-dynamic": "4.0.0-beta.7",
+    "@angular/router": "4.0.0-beta.7",
 
     "core-js": "^2.4.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "^5.0.1",
     "systemjs": "0.19.41",
-    "zone.js": "0.7.6"
+    "zone.js": "^0.7.2"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.34",
@@ -32,6 +32,6 @@
 
     "rimraf": "^2.5.4",
 
-    "typescript": "2.0.10"
+    "typescript": "^2.1.5"
   }
 }
