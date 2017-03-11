@@ -9,29 +9,27 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@angular/common": "4.0.0-rc.2",
-    "@angular/compiler": "4.0.0-rc.2",
-    "@angular/core": "4.0.0-rc.2",
-    "@angular/forms": "4.0.0-rc.2",
-    "@angular/http": "4.0.0-rc.2",
-    "@angular/platform-browser": "4.0.0-rc.2",
-    "@angular/platform-browser-dynamic": "4.0.0-rc.2",
-    "@angular/router": "4.0.0-rc.2",
+    "@angular/common": "4.0.0-rc.3",
+    "@angular/compiler": "4.0.0-rc.3",
+    "@angular/core": "4.0.0-rc.3",
+    "@angular/forms": "4.0.0-rc.3",
+    "@angular/http": "4.0.0-rc.3",
+    "@angular/platform-browser": "4.0.0-rc.3",
+    "@angular/platform-browser-dynamic": "4.0.0-rc.3",
+    "@angular/router": "4.0.0-rc.3",
 
     "core-js": "^2.4.1",
-    "reflect-metadata": "^0.1.8",
     "rxjs": "^5.0.1",
     "systemjs": "0.19.41",
-    "zone.js": "^0.7.2"
+    "zone.js": "^0.7.8"
   },
   "devDependencies": {
-    "@types/core-js": "^0.9.34",
-    "@types/node": "^6.0.45",
-    "concurrently": "^3.0.0",
+    "concurrently": "^3.2.0",
     "lite-server": "^2.2.2",
 
-    "rimraf": "^2.5.4",
+    "@types/node": "^6.0.46",
 
+    "rimraf": "^2.5.4",
     "typescript": "^2.1.6"
   }
 }
