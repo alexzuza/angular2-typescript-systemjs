@@ -11,6 +11,7 @@
     // map tells the System loader where to look for things
     map: {
       // our app is within the app folder
+      src: 'dist',
       app: 'dist',
       // angular bundles
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
@@ -23,7 +24,7 @@
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
       
       // other libraries
-     // 'rxjs':                       'npm:rxjs'
+      'rxjs':                       'npm:rxjs'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -31,9 +32,9 @@
         main: './main.js',
         defaultExtension: 'js'
       },
-      // rxjs: {
-      //   defaultExtension: 'js'
-      // }
+      rxjs: {
+         defaultExtension: 'js'
+      }
     }
   });
 })(this);

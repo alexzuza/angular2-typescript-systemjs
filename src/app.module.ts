@@ -2,6 +2,7 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { TreeModule } from './tree/tree.module';
 import { TableModule } from './table/table.module';
@@ -13,6 +14,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
 @NgModule({
   imports:      [ 
     BrowserModule,
+    CoreModule,
     AppRoutingModule,
     TreeModule,
     TableModule

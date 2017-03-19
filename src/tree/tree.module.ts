@@ -4,11 +4,8 @@ import { CommonModule } from '@angular/common';
 import { TreeRoutingModule } from './tree-routing.module';
 
 import { TreeComponent } from './tree.component';
-import { Comp1Component } from "./leafs/comp1.component";
-import { Comp2Component } from "./leafs/comp2.component";
-import { Comp3Component } from "./leafs/comp3.component";
-import { Comp4Component } from "./leafs/comp4.component";
 
+import { components } from './components';
 
 @NgModule({
   imports:      [ 
@@ -17,11 +14,7 @@ import { Comp4Component } from "./leafs/comp4.component";
   ],
   declarations: [
     TreeComponent,
-    Comp1Component,
-    Comp2Component,
-    Comp3Component,
-
-    Comp4Component
+    ...components
   ]
 })
 export class TreeModule { }

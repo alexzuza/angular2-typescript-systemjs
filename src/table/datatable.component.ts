@@ -15,9 +15,9 @@ import { ColumnComponent } from './column.component';
               </th>
             </tr>
           </thead>
-          <tbody *ngFor="let row of dataset; let i = index">
-            <tr>
-              <td  *ngFor="let column of columns">
+          <tbody>
+            <tr *ngFor="let row of dataset; let i = index">
+              <td *ngFor="let column of columns">
                 <ng-container *ngIf="!column.bodyTemplate">{{row[column.value]}}</ng-container> 
                 <ng-template *ngIf="column.bodyTemplate" 
                   [ngTemplateOutlet]="column.bodyTemplate" 

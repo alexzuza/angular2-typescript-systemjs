@@ -10,7 +10,7 @@ import { Photo } from './models/photo.model';
         <column [value]="'id'" [header]="'ID'"></column>
         <column [value]="'title'" [header]="'Title'">
             <ng-template #tableHeaderTemplate let-column>
-                <span style="color: red">{{ column.header }}</span>
+                <span style="color: #f58d3b">{{ column.header }}</span>
             </ng-template>
         </column>
         <column [value]="'title'" [header]="'Actions'">
