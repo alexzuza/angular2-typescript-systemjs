@@ -1,0 +1,48 @@
+<h2>Add user</h2>
+<form #form="ngForm" (ngSubmit)="save(form.value, form.valid)">
+  <div class="form-control">
+    <label>Name</label>
+    <input type="text" name="name" [(ngModel)]="user.name" #name="ngModel" required minlength="5">
+    <small [hidden]="name.valid || (name.pristine && !form.submitted)" class="text-danger">
+        Name is required (minimum 5 characters).
+    </small>
+  </div>
+  <fieldset ngModelGroup="address" class="form-group">
+    <legend>Address</legend>
+    <div class="form-control">
+      <label>Country</label>
+      <select [(ngModel)]="user.address.country" name="country" #country="ngModel" required>
+        <option value="">--Select country--</option>
+        <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+      </select>
+      <small [hidden]="country.valid || (country.pristine && !form.submitted)" class="text-danger">
+          Country is required.
+        </small>
+    </div>
+
+    <div class="form-control">
+      <label>Street</label>
+      <input type="text" name="street" [(ngModel)]="user.address.street" #street="ngModel" required>
+      <small [hidden]="street.valid || (street.pristine && !form.submitted)" class="text-danger">
+          Street is required.
+       </small>
+    </div>
+    <div class="form-control">
+      <label>Zip code</label>
+      <my-custom-input [(ngModel)]="user.address.zipCode" name="zipCode" ngDefaultControl [(value)]="user.address.zipCode"></my-custom-input>
+    </div>
+  </fieldset>
+
+  <button type="default" class="btn">Submit</button>
+</form>
+
+<hr>
+<div class="form-details">
+  <p>Form valid: {{form.valid | json}}</p>
+
+  <p>Form value: </p>
+  <pre>{{form.value | json}}</pre>
+
+  <p>User value:</p>
+  <pre>{{user | json}}</pre>
+</div>

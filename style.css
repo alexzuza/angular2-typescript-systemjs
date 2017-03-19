@@ -22,7 +22,13 @@ body {
 }
 
 h2 {
-  margin: 0;
+  margin: 0 0 10px 0;
+}
+
+pre {
+  background: #4e5054;
+  color: #fff;
+  padding: 10px;
 }
 
 .center {
@@ -94,7 +100,7 @@ my-tree {
 my-tree ul {
   padding-top: 20px;
   position: relative;
-  margin: 0 -5px;
+  margin: 0 -9px;
 }
 
 my-tree * {
@@ -197,17 +203,19 @@ my-tree > ul > li:before {
   text-align: center;
 }
 
-
-.btn-run {
-  position: absolute;
-  top: 0;
-  right: 0;
+.btn {
   color: #FFF;
   line-height: 40px;
   padding: 0 10px;
   background-color: #369;
   border: none;
   cursor: pointer;
+}
+
+.btn-run {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* Table */
@@ -294,4 +302,31 @@ tbody tr:last-child td:last-child {
 .pagination-current-page {
   float: right;
   margin-top: 10px;
+}
+
+/* Forms */
+
+.form-group {
+  margin: 10px 0;
+}
+
+input[type="text"] {
+  line-height: 24px;
+
+}
+
+.form-control {
+  margin-bottom: 15px;
+}
+
+.form-control label {
+  margin-right: 10px;
+}
+
+.form-control:last-of-type {
+  margin-bottom: 0;
+}
+
+.text-danger {
+  color: red;
 }

@@ -214,7 +214,13 @@ export class Comp11Component implements AfterViewChecked {
 
 @Component({
   selector: 'comp12',
-  template: `<span (click)="0">12</span>`
+  template: `<span (click)="0">12</span>
+  
+    <ul>
+      <li><comp16></comp16></li>
+      <li><comp17></comp17></li>
+    </ul>
+    `
 })
 export class Comp12Component implements AfterViewChecked {
   constructor(
@@ -228,7 +234,9 @@ export class Comp12Component implements AfterViewChecked {
 
 @Component({
   selector: 'comp13',
-  template: `<span (click)="0">13</span>`
+  template: `
+    <span (click)="0">13</span>
+  `
 })
 export class Comp13Component implements AfterViewChecked {
   constructor(
@@ -268,6 +276,35 @@ export class Comp15Component implements AfterViewChecked {
   }
 }
 
+@Component({
+  selector: 'comp16',
+  template: `<span (click)="0">16</span>`
+})
+export class Comp16Component implements AfterViewChecked {
+  constructor(
+    private elRef: ElementRef, 
+    private zone: NgZone) { }
+  
+  ngAfterViewChecked() {
+    toggleClass(this.elRef, this.zone);
+  }
+}
+
+@Component({
+  selector: 'comp17',
+  template: `<span (click)="0">17</span>`
+})
+export class Comp17Component implements AfterViewChecked {
+  constructor(
+    private elRef: ElementRef, 
+    private zone: NgZone) { }
+  
+  ngAfterViewChecked() {
+    toggleClass(this.elRef, this.zone);
+  }
+}
+
+
 export const components = [
   Comp1Component,
   Comp2Component,
@@ -283,5 +320,7 @@ export const components = [
   Comp12Component,
   Comp13Component,
   Comp14Component,
-  Comp15Component
+  Comp15Component,
+  Comp16Component,
+  Comp17Component
 ];
