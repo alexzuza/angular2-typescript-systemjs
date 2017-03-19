@@ -2,21 +2,25 @@ import { NgModule }      from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { TableRoutingModule } from './table-routing.module';
+import { ShareModule } from '../shared/share.module';
 
-import { TableComponent } from './table.component';
-import { DataTableComponent } from './datatable.component';
-import { ColumnComponent } from "./column.component";
+import { TableLayoutComponent } from './components/table-layout.component';
+import { DataTableComponent } from './components/datatable.component';
+import { ColumnComponent } from './components/column.component';
+import { PaginationComponent } from './components/pagination.component';
 
 
 @NgModule({
   imports:      [ 
     CommonModule,
+    ShareModule,
     TableRoutingModule
   ],
   declarations: [
-    TableComponent,
+    TableLayoutComponent,
     DataTableComponent,
-    ColumnComponent
+    ColumnComponent,
+    PaginationComponent
   ]
 })
 export class TableModule { }
