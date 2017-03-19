@@ -17,5 +17,20 @@
     "id": "4",
     "title": "Title4",
     "url": "/gallery/oil/portret-muzchini.jpg"  
-  }
+  },
+  {
+    "id": "5",
+    "title": "Title5",
+    "url": "/gallery/Monohromnyj_portret_maslom.jpg"  
+  },
+  {
+    "id": "6",
+    "title": "Title6",
+    "url": "/gallery/pencil/portret-devushki-v-shljape-karandashom.jpg"  
+  },
+  {
+    "id": "7",
+    "title": "Title7",
+    "url": "/gallery/pencil/portret-devushki-s-ogolennim-plechom.jpg"  
+  }  
 ]

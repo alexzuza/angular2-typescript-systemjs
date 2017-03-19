@@ -30,6 +30,7 @@ h2 {
 }
 .scroll { 
   overflow-y: scroll;
+  height: 100%;
 }
 
 .scroll:hover::-webkit-scrollbar-thumb {
@@ -128,7 +129,7 @@ my-tree span {
 }
 
 my-tree span.checked {
-  background: #FF6700;
+  background: #ff9800;
 }
 
 my-tree span.on-push:before {
@@ -211,14 +212,21 @@ my-tree > ul > li:before {
 
 /* Table */
 
+my-table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 table {
     background: #fff none repeat scroll 0 0;
     border-collapse: separate;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    margin: 20px auto;
+    height: 100%;
     width: 100%;
 }
+
 thead {
     border-radius: 5px;
 }
@@ -285,4 +293,5 @@ tbody tr:last-child td:last-child {
 
 .pagination-current-page {
   float: right;
+  margin-top: 10px;
 }

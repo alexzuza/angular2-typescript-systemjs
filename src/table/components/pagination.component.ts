@@ -17,10 +17,10 @@ import { Component, OnChanges, Input, Output, ElementRef, EventEmitter, Renderer
           <a class="page-link" [class.active]="currentPage === page" href (click)="selectPage(page, $event)">{{page}}</a>
         </li>
 
-        <li class="pagination-next" *ngIf="directionLinks" [class.disabled]="currentPage === this.totalPages">
+        <li class="pagination-next" *ngIf="directionLinks" [class.disabled]="currentPage === totalPages">
           <a class="page-link" href (click)="selectPage(currentPage + 1, $event)">Next</a></li>
 
-        <li *ngIf="boundaryLinks" [class.disabled]="currentPage === this.totalPages">
+        <li *ngIf="boundaryLinks" [class.disabled]="currentPage === totalPages">
           <a class="page-link" href (click)="selectPage(totalPages, $event)">Last</a>
         </li>
         <li> 
@@ -30,7 +30,7 @@ import { Component, OnChanges, Input, Output, ElementRef, EventEmitter, Renderer
             </select>
         </li>
         <li class="pagination-current-page">
-            Current page: {{ currentPage }}
+            Page {{ currentPage }} of {{ total }}
         </li>
       </ul>
     
@@ -51,8 +51,6 @@ export class PaginationComponent implements OnChanges {
     @Output() currentPageChange:EventEmitter<number> = new EventEmitter();
 
     @Output() pageSizeChange:EventEmitter<number> = new EventEmitter();
-
-    private _totalPages:number;
    
     @Input()
     public set currentPage(value) {
@@ -70,11 +68,11 @@ export class PaginationComponent implements OnChanges {
         return this._currentPage;
     }
 
-    private totalPages: number;
+    totalPages: number;
+
+    pages: Array<any>;
 
     private _currentPage:number;
-
-    private pages: Array<any>;
 
     constructor(public renderer: Renderer, public elementRef: ElementRef) { }
 

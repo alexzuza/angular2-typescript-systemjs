@@ -27,7 +27,10 @@ import { ColumnComponent } from './column.component';
           </tbody>
       </table>
     
-    `
+    `,
+  host: {
+    class: 'scroll'
+  }
 })
 export class DataTableComponent {
 
