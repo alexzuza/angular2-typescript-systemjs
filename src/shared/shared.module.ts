@@ -10,4 +10,4 @@ import { PagerPipe } from './pipes/pager.pipe';
     PagerPipe
   ]
 })
-export class ShareModule {}
+export class SharedModule {}
