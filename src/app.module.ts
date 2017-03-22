@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { TreeModule } from './tree/tree.module';
 import { TableModule } from './table/table.module';
 import { TemplateDrivenFormsModule } from './template-driven-forms/template-driven-forms.module';
+import { ReactiveDrivenFormsModule } from './reactive-driven-forms/reactive-driven-forms.module';
 
 import { AppComponent } from './app.component';
 
@@ -23,7 +24,8 @@ import { PageNotFoundComponent } from './page-not-found.component';
     AppRoutingModule,
     TreeModule,
     TableModule,
-    TemplateDrivenFormsModule
+    TemplateDrivenFormsModule,
+    ReactiveDrivenFormsModule
   ],
   declarations: [
     AppComponent,
