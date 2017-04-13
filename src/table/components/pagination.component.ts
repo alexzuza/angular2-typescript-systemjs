@@ -2,39 +2,7 @@ import { Component, OnChanges, Input, Output, ElementRef, EventEmitter, Renderer
 
 @Component({
     selector: 'my-pagination',
-    template: `
-       <ul class="pagination">
-
-        <li *ngIf="boundaryLinks" [class.disabled]="currentPage === 1">
-          <a class="page-link" href (click)="selectPage(1, $event)">First</a>
-        </li>
-
-        <li *ngIf="directionLinks" [class.disabled]="currentPage === 1">
-          <a class="page-link" href (click)="selectPage(currentPage - 1, $event)">Previous</a>
-        </li>
-
-        <li *ngFor="let page of pages">
-          <a class="page-link" [class.active]="currentPage === page" href (click)="selectPage(page, $event)">{{page}}</a>
-        </li>
-
-        <li class="pagination-next" *ngIf="directionLinks" [class.disabled]="currentPage === totalPages">
-          <a class="page-link" href (click)="selectPage(currentPage + 1, $event)">Next</a></li>
-
-        <li *ngIf="boundaryLinks" [class.disabled]="currentPage === totalPages">
-          <a class="page-link" href (click)="selectPage(totalPages, $event)">Last</a>
-        </li>
-        <li> 
-            Items per page
-            <select (change)="pageSizeChanged(select.value)" #select [value]="pageSize">
-                <option *ngFor="let option of [1,2,3,5,10]" [value]="option">{{option}}</option>
-            </select>
-        </li>
-        <li class="pagination-current-page">
-            Page {{ currentPage }} of {{ total }}
-        </li>
-      </ul>
-    
-    `
+    templateUrl: `src/table/components/pagination.component.html`
 })
 export class PaginationComponent implements OnChanges {
 

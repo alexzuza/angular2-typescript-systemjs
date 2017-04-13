@@ -1,0 +1,31 @@
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th *ngFor="let column of columns">
+                <ng-container *ngIf="column.headerTemplate; else defaultHeaderTemplate"
+                             [ngTemplateOutlet]="column.headerTemplate"
+                             [ngOutletContext]="{ $implicit: { header: column.header } }"></ng-container>
+                <ng-template #defaultHeaderTemplate>
+                    {{column.header}}
+                </ng-template>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of dataset; let i = index">
+            <td *ngFor="let column of columns;" [ngClass]="{ editing: cell === editingCell }" (click)="toggleEditing(cell, column, input)" #cell>
+                <div class="cell-data">
+                    <ng-container *ngIf="column.bodyTemplate; else defaultDataTemplate"
+                                  [ngTemplateOutlet]="column.bodyTemplate"
+                                  [ngOutletContext]="{ $implicit: { value: row[column.value] }, row: row }"></ng-container>
+                    <ng-template #defaultDataTemplate>
+                        {{row[column.value]}}
+                    </ng-template>
+                </div>
+                <div class="cell-editor" *ngIf="column.editable">
+                    <input type="text" [value]="row[column.value]" (change)="row[column.value] = $event.target.value" #input (blur)="editingCell = null"/>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

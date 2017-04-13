@@ -2,44 +2,32 @@ import { Component, Input } from '@angular/core';
 import { ColumnComponent } from './column.component';
 
 @Component({
-  selector: 'datatable',
-  template: `
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th *ngFor="let column of columns">
-                <ng-container *ngIf="!column.headerTemplate">{{column.header}}</ng-container> 
-                <ng-template *ngIf="column.headerTemplate" 
-                  [ngTemplateOutlet]="column.headerTemplate" 
-                  [ngOutletContext]="{ $implicit: { header: column.header } }"></ng-template>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of dataset; let i = index">
-              <td *ngFor="let column of columns">
-                <ng-container *ngIf="!column.bodyTemplate">{{row[column.value]}}</ng-container> 
-                <ng-template *ngIf="column.bodyTemplate" 
-                  [ngTemplateOutlet]="column.bodyTemplate" 
-                  [ngOutletContext]="{ $implicit: { value: row[column.value] }, row: row }"></ng-template>
-              </td>
-            </tr>
-          </tbody>
-      </table>
-    
-    `,
-  host: {
-    class: 'scroll'
-  }
+    selector: 'datatable',
+    templateUrl: `src/table/components/datatable.component.html`,
+    host: {
+        class: 'scroll'
+    }
 })
 export class DataTableComponent {
 
-  @Input() dataset;
+    @Input() dataset: any;
 
-  columns: ColumnComponent[] = [];
+    columns: ColumnComponent[] = [];
 
-  addColumn(column) {
-    this.columns.push(column);
-  }
+    editingCell: any;
+
+    addColumn(column) {
+        this.columns.push(column);
+    }
+
+    toggleEditing(cell: HTMLElement, column: ColumnComponent) {
+        if(column.editable) {
+            this.editingCell = cell;
+            setTimeout(() => {
+                cell.querySelector('input').focus();
+            }, 100);
+        }
+
+    }
 
 }

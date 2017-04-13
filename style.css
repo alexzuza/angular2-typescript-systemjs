@@ -227,6 +227,7 @@ my-table {
 }
 
 table {
+    table-layout: fixed;
     background: #fff none repeat scroll 0 0;
     border-collapse: separate;
     border-radius: 5px;
@@ -302,6 +303,16 @@ tbody tr:last-child td:last-child {
 .pagination-current-page {
   float: right;
   margin-top: 10px;
+}
+
+.cell-editor {
+    display: none;
+}
+.editing .cell-editor {
+    display: block;
+}
+.editing .cell-data {
+    display: none;
 }
 
 /* Forms */
