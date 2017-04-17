@@ -1,0 +1,20 @@
+<h2>Chips example</h2>
+<p>Type something and press Enter</p>
+<div class="control">
+    <label class="control-label">Tags</label>
+    <ul class="chips-list" (click)="token.focus()" [ngClass]="{ focus: focused }">
+        <li *ngFor="let tag of tags; let i = index" class="chip">
+            <i class="chip__icon"></i>
+            {{ tag }}
+            <span class="chip__close" (click)="removeTag(i)">&times;</span>
+        </li>
+        <li class="chip--input">
+            <input #token type="text" class="chip-input-control" placeholder="Add your skills here"
+                   (keydown.enter)="!!onKeydown(token)"
+                   (focus)="focused = true"
+                   (blur)="focused = false">
+        </li>
+    </ul>
+</div>
+
+<pre>{{ tags | json }}</pre>

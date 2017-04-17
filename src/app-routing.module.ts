@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PageNotFoundComponent } from "./page-not-found.component";
 
-import { SandBoxComponent } from './sandbox/sandbox.component';
+import { ChipsComponent } from './chips/chips.component';
 
 export const routes: Routes = [
-  { path: 'sandbox', component: SandBoxComponent },
-  { path: '', redirectTo: '/sandbox', pathMatch: 'full' }
+  { path: 'chips', component: ChipsComponent },
+  { path: '', redirectTo: '/chips', pathMatch: 'full' }
 ];
 
 @NgModule({

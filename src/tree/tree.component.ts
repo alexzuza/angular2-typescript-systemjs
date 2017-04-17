@@ -14,7 +14,4 @@ import { Component, ViewChild, NgZone, ChangeDetectorRef } from '@angular/core';
 })
 export class TreeComponent {
 
-  constructor() {
-    //document.addEventListener('mousemove', function(){})
-  }
 }

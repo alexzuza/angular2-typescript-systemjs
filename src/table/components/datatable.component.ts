@@ -3,7 +3,7 @@ import { ColumnComponent } from './column.component';
 
 @Component({
     selector: 'datatable',
-    templateUrl: `src/table/components/datatable.component.html`,
+    templateUrl: `./datatable.component.html`,
     host: {
         class: 'scroll'
     }

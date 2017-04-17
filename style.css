@@ -125,9 +125,9 @@ my-tree span {
   padding: 10px;
   background: #4f515a;
   color: #fff;
-  width: 50px;
+  width: 100px;
   border-radius: 50%;
-  line-height: 50px;
+  line-height: 100px;
   cursor: pointer;
   z-index: 1;
   position: relative;
@@ -419,4 +419,140 @@ legend {
     color: #4f4f4f;
     text-transform: capitalize;
     font-weight: bold;
+}
+
+
+/* Chips */
+
+.control {
+    display: flex;
+}
+
+.control-label {
+    line-height: 50px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.chips-list {
+    list-style: none;
+    margin: 0 0 0 10px;
+    padding: 0 5px;
+    cursor: text;
+    border: 1px solid #b3b0b0;
+    flex: 1;
+}
+
+.chips-list.focus {
+    box-shadow: 0px 0px 5px #51a6de;
+}
+.chip-input-control {
+    border: none !important;
+    width: 10em !important;
+    line-height: 50px !important;
+    outline: none !important;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    height: auto !important;
+}
+
+.chip {
+    cursor: default;
+    display: inline-block;
+    margin-right: 5px;
+    background: #f1f1f1;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px 0 60px;
+    border-radius: 25px;
+    position: relative;
+}
+
+.chip__icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url('https://www.w3schools.com/howto/img_avatar.png') no-repeat;
+    background-size: contain;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.chip__close {
+    padding: 5px 5px 5px 10px;
+    cursor: pointer;
+}
+
+.chip--input {
+    display: inline-block;
+}
+
+/* WYSIWYG */
+
+wysiwyg-editor {
+    display: block;
+}
+
+wysiwyg-toolbar {
+    display: flex;
+    font-size: 12px;
+    background: #f0f0f0;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 0 0;
+}
+
+.wysiwyg-toolbar__item {
+    border-right: 1px solid #DEDEDE;
+}
+
+
+.wysiwyg-toolbar__button {
+    padding: 0 15px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    line-height: 34px;
+}
+
+.wysiwyg-toolbar__button--active {
+    background: #fff;
+}
+
+
+
+.wysiwyg-editor__container {
+    border: 1px solid #CCCCCC;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    position: relative;
+}
+
+.wysiwyg-editor__content {
+    height: 400px;
+    background: #fff;
+    cursor: text;
+    outline: none;
+    padding: 15px
+}
+
+
+
+.wysiwyg-editor__src-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.wysiwyg-editor__src {
+    height: 100%;
+    width: 100%;
+    resize: none;
+    padding: 20px 30px;
+    outline: none;
+    border: none;
 }

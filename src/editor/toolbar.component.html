@@ -1,0 +1,14 @@
+<div class="wysiwyg-toolbar__item" *ngFor="let button of buttons">
+    <div *ngIf="!button.isComplex">
+        <button type="button" class="wysiwyg-toolbar__button" [ngClass]="{ 'wysiwyg-toolbar__button--active': button.active }"
+                [title]="button.title" (click)="execCommand(button.command, button.options)">
+            {{ button.title }}
+        </button>
+    </div>
+</div>
+
+<div class="wysiwyg-toolbar__item">
+    <button type="button" class="wysiwyg-toolbar__button" [ngClass]="{ 'wysiwyg-toolbar__button--active': editMode }" (click)="toggleEditMode()">
+        HTML
+    </button>
+</div>

@@ -48,13 +48,13 @@ export class Comp2Component extends SomeComponent {
 @Component({
   selector: 'comp3',
   template: `
-    <span class="on-push" (click)="0">3</span>
+    <span (click)="0">3</span>
     <ul>
       <li><comp7></comp7></li>
       <li><comp8></comp8></li>
     </ul>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Comp3Component extends SomeComponent {
   constructor(elRef: ElementRef, zone: NgZone) {
@@ -102,13 +102,13 @@ export class Comp6Component extends SomeComponent {
 @Component({
   selector: 'comp7',
   template: `
-      <span class="on-push" (click)="0">7</span>
+      <span  (click)="0">7</span>
       <ul>
         <li><comp9></comp9></li>
         <li><comp10></comp10></li>
       </ul>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Comp7Component extends SomeComponent {
   constructor(elRef: ElementRef, zone: NgZone) {

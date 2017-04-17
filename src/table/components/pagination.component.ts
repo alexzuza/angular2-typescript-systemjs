@@ -1,8 +1,8 @@
-import { Component, OnChanges, Input, Output, ElementRef, EventEmitter, Renderer} from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'my-pagination',
-    templateUrl: `src/table/components/pagination.component.html`
+    templateUrl: `./pagination.component.html`
 })
 export class PaginationComponent implements OnChanges {
 
@@ -42,8 +42,6 @@ export class PaginationComponent implements OnChanges {
 
     private _currentPage:number;
 
-    constructor(public renderer: Renderer, public elementRef: ElementRef) { }
-
     ngOnChanges() {
         this.totalPages = this.calculateTotalPages();
         this.pages = this.getPages(this.totalPages);
@@ -53,7 +51,7 @@ export class PaginationComponent implements OnChanges {
         this.pageSizeChange.emit(val);   
     }
 
-    private selectPage(page:number, event?:MouseEvent) {
+    private selectPage(page:number, event?: MouseEvent) {
         if (event) {
             event.preventDefault();
         }
@@ -79,7 +77,7 @@ export class PaginationComponent implements OnChanges {
             }
         }
 
-        for (var number = startPage; number <= endPage; number++) {
+        for (let number = startPage; number <= endPage; number++) {
             pages.push(number);
         }
 

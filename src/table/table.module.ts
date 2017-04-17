@@ -11,7 +11,7 @@ import { PaginationComponent } from './components/pagination.component';
 
 
 @NgModule({
-  imports:      [ 
+  imports: [
     CommonModule,
     SharedModule,
     TableRoutingModule

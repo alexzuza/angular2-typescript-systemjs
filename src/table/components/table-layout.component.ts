@@ -7,7 +7,7 @@ import { PhotoService } from '../services/photos.service';
 
 @Component({
   selector: 'my-table',
-  templateUrl: `src/table/components/table-layout.component.html`,
+  templateUrl: `./table-layout.component.html`,
   providers: [PhotoService]
 })
 export class TableLayoutComponent {

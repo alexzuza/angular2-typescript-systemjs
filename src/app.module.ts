@@ -7,37 +7,38 @@ import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { TreeModule } from './tree/tree.module';
 import { TableModule } from './table/table.module';
+import { EditorModule } from './editor/editor.module';
 import { TemplateDrivenFormsModule } from './template-driven-forms/template-driven-forms.module';
 import { ReactiveDrivenFormsModule } from './reactive-driven-forms/reactive-driven-forms.module';
 
 import { AppComponent } from './app.component';
 
-import { SandBoxComponent, ChildComponent } from './sandbox/sandbox.component';
+import { ChipsComponent } from './chips/chips.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 
-
 @NgModule({
-  imports:      [ 
-    BrowserModule,
-    HttpModule,
-    CoreModule,
-    AppRoutingModule,
-    TreeModule,
-    TableModule,
-    TemplateDrivenFormsModule,
-    ReactiveDrivenFormsModule
-  ],
-  declarations: [
-    AppComponent,
-    SandBoxComponent,
-    ChildComponent,
-    PageNotFoundComponent
-  ],
-  providers: [
-    {
-      provide: LocationStrategy, useClass: HashLocationStrategy
-    }
-  ],
-  bootstrap:    [ AppComponent ]
+    imports: [
+        BrowserModule,
+        HttpModule,
+        CoreModule,
+        AppRoutingModule,
+        TreeModule,
+        TableModule,
+        EditorModule,
+        TemplateDrivenFormsModule,
+        ReactiveDrivenFormsModule
+    ],
+    declarations: [
+        AppComponent,
+        ChipsComponent,
+        PageNotFoundComponent
+    ],
+    providers: [
+        {
+            provide: LocationStrategy, useClass: HashLocationStrategy
+        }
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
