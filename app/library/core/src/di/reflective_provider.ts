@@ -1,22 +1,32 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-import { ClassProvider, ExistingProvider, FactoryProvider, Provider, TypeProvider, ValueProvider } from './provider';
-import { Type } from '../type';
-import {
-  invalidProviderError, mixingMultiProvidersWithRegularProvidersError,
-  noAnnotationError
-} from './reflective_errors';
-import { ReflectiveKey } from './reflective_key';
-import { resolveForwardRef } from './forward_ref';
-import { reflector } from '../reflection/reflection';
-import { Inject, Optional, Self, SkipSelf } from './metadata';
-import { InjectionToken } from './injection_token';
+import {reflector} from '../reflection/reflection';
+import {Type} from '../type';
+
+import {resolveForwardRef} from './forward_ref';
+import {InjectionToken} from './injection_token';
+import {Inject, Optional, Self, SkipSelf} from './metadata';
+import {ClassProvider, ExistingProvider, FactoryProvider, Provider, TypeProvider, ValueProvider} from './provider';
+import {invalidProviderError, mixingMultiProvidersWithRegularProvidersError, noAnnotationError} from './reflective_errors';
+import {ReflectiveKey} from './reflective_key';
+
 
 interface NormalizedProvider extends TypeProvider, ValueProvider, ClassProvider, ExistingProvider,
-  FactoryProvider {}
+    FactoryProvider {}
 
+/**
+ * `Dependency` is used by the framework to extend DI.
+ * This is internal to Angular and should not be used directly.
+ */
 export class ReflectiveDependency {
   constructor(
-    public key: ReflectiveKey, public optional: boolean, public visibility: Self|SkipSelf|null) {}
+      public key: ReflectiveKey, public optional: boolean, public visibility: Self|SkipSelf|null) {}
 
   static fromKey(key: ReflectiveKey): ReflectiveDependency {
     return new ReflectiveDependency(key, false, null);
@@ -25,33 +35,75 @@ export class ReflectiveDependency {
 
 const _EMPTY_LIST: any[] = [];
 
+/**
+ * An internal resolved representation of a {@link Provider} used by the {@link Injector}.
+ *
+ * It is usually created automatically by `Injector.resolveAndCreate`.
+ *
+ * It can be created manually, as follows:
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/RfEnhh8kUEI0G3qsnIeT?p%3Dpreview&p=preview))
+ *
+ * ```typescript
+ * var resolvedProviders = Injector.resolve([{ provide: 'message', useValue: 'Hello' }]);
+ * var injector = Injector.fromResolvedProviders(resolvedProviders);
+ *
+ * expect(injector.get('message')).toEqual('Hello');
+ * ```
+ *
+ * @experimental
+ */
 export interface ResolvedReflectiveProvider {
+  /**
+   * A key, usually a `Type<any>`.
+   */
   key: ReflectiveKey;
 
+  /**
+   * Factory function which can return an instance of an object represented by a key.
+   */
   resolvedFactories: ResolvedReflectiveFactory[];
 
+  /**
+   * Indicates if the provider is a multi-provider or a regular provider.
+   */
   multiProvider: boolean;
 }
 
 export class ResolvedReflectiveProvider_ implements ResolvedReflectiveProvider {
-  constructor(public key: ReflectiveKey, public resolvedFactories: ResolvedReflectiveFactory[],
-    public  multiProvider: boolean) {}
+  constructor(
+      public key: ReflectiveKey, public resolvedFactories: ResolvedReflectiveFactory[],
+      public multiProvider: boolean) {}
 
-    get resolvedFactory(): ResolvedReflectiveFactory {
-      return this.resolvedFactories[0];
-    }
+  get resolvedFactory(): ResolvedReflectiveFactory { return this.resolvedFactories[0]; }
 }
 
+/**
+ * An internal resolved representation of a factory function created by resolving {@link
+ * Provider}.
+ * @experimental
+ */
 export class ResolvedReflectiveFactory {
   constructor(
-    public factory: Function,
-    public dependencies: ReflectiveDependency[]) {}
+      /**
+       * Factory function which can return an instance of an object represented by a key.
+       */
+      public factory: Function,
+
+      /**
+       * Arguments (dependencies) to the `factory` function.
+       */
+      public dependencies: ReflectiveDependency[]) {}
 }
 
+
+/**
+ * Resolve a single provider.
+ */
 function resolveReflectiveFactory(provider: NormalizedProvider): ResolvedReflectiveFactory {
   let factoryFn: Function;
   let resolvedDeps: ReflectiveDependency[];
-  if(provider.useClass) {
+  if (provider.useClass) {
     const useClass = resolveForwardRef(provider.useClass);
     factoryFn = reflector.factory(useClass);
     resolvedDeps = _dependenciesFor(useClass);
@@ -68,16 +120,25 @@ function resolveReflectiveFactory(provider: NormalizedProvider): ResolvedReflect
   return new ResolvedReflectiveFactory(factoryFn, resolvedDeps);
 }
 
-function resolveReflectionProvider(provider: NormalizedProvider): ResolvedReflectiveProvider {
+/**
+ * Converts the {@link Provider} into {@link ResolvedProvider}.
+ *
+ * {@link Injector} internally only uses {@link ResolvedProvider}, {@link Provider} contains
+ * convenience provider syntax.
+ */
+function resolveReflectiveProvider(provider: NormalizedProvider): ResolvedReflectiveProvider {
   return new ResolvedReflectiveProvider_(
-    ReflectiveKey.get(provider.provide), [resolveReflectiveFactory(provider)], provider.multi || false);
+      ReflectiveKey.get(provider.provide), [resolveReflectiveFactory(provider)],
+      provider.multi || false);
 }
 
+/**
+ * Resolve a list of Providers.
+ */
 export function resolveReflectiveProviders(providers: Provider[]): ResolvedReflectiveProvider[] {
   const normalized = _normalizeProviders(providers, []);
-  const resolved = normalized.map(resolveReflectionProvider);
+  const resolved = normalized.map(resolveReflectiveProvider);
   const resolvedProviderMap = mergeResolvedReflectiveProviders(resolved, new Map());
-
   return Array.from(resolvedProviderMap.values());
 }
 
@@ -86,8 +147,10 @@ export function resolveReflectiveProviders(providers: Provider[]): ResolvedRefle
  * each key is contained exactly once and multi providers
  * have been merged.
  */
-export function mergeResolvedReflectiveProviders(providers: ResolvedReflectiveProvider[],
-  normalizedProvidersMap: Map<number, ResolvedReflectiveProvider>): Map<number, ResolvedReflectiveProvider> {
+export function mergeResolvedReflectiveProviders(
+    providers: ResolvedReflectiveProvider[],
+    normalizedProvidersMap: Map<number, ResolvedReflectiveProvider>):
+    Map<number, ResolvedReflectiveProvider> {
   for (let i = 0; i < providers.length; i++) {
     const provider = providers[i];
     const existing = normalizedProvidersMap.get(provider.key.id);
@@ -106,7 +169,7 @@ export function mergeResolvedReflectiveProviders(providers: ResolvedReflectivePr
       let resolvedProvider: ResolvedReflectiveProvider;
       if (provider.multiProvider) {
         resolvedProvider = new ResolvedReflectiveProvider_(
-          provider.key, provider.resolvedFactories.slice(), provider.multiProvider);
+            provider.key, provider.resolvedFactories.slice(), provider.multiProvider);
       } else {
         resolvedProvider = provider;
       }
@@ -118,12 +181,15 @@ export function mergeResolvedReflectiveProviders(providers: ResolvedReflectivePr
 
 function _normalizeProviders(providers: Provider[], res: Provider[]): Provider[] {
   providers.forEach(b => {
-    if(b instanceof Type) {
-      res.push({ provide: b, useClass: b });
-    } else if(b && typeof b == 'object' && (b as any).provide !== undefined) {
-      res.push(b as NormalizedProvider)
-    } else if(b instanceof Array) {
+    if (b instanceof Type) {
+      res.push({provide: b, useClass: b});
+
+    } else if (b && typeof b == 'object' && (b as any).provide !== undefined) {
+      res.push(b as NormalizedProvider);
+
+    } else if (b instanceof Array) {
       _normalizeProviders(b, res);
+
     } else {
       throw invalidProviderError(b);
     }
@@ -133,7 +199,7 @@ function _normalizeProviders(providers: Provider[], res: Provider[]): Provider[]
 }
 
 export function constructDependencies(
-  typeOrFunc: any, dependencies?: any[]): ReflectiveDependency[] {
+    typeOrFunc: any, dependencies?: any[]): ReflectiveDependency[] {
   if (!dependencies) {
     return _dependenciesFor(typeOrFunc);
   } else {
@@ -145,16 +211,15 @@ export function constructDependencies(
 function _dependenciesFor(typeOrFunc: any): ReflectiveDependency[] {
   const params = reflector.parameters(typeOrFunc);
 
-  if(!params) return [];
-  if(params.some(x => x == null)) {
+  if (!params) return [];
+  if (params.some(p => p == null)) {
     throw noAnnotationError(typeOrFunc, params);
   }
-
   return params.map(p => _extractToken(typeOrFunc, p, params));
 }
 
 function _extractToken(
-  typeOrFunc: any, metadata: any[] | any, params: any[][]): ReflectiveDependency {
+    typeOrFunc: any, metadata: any[] | any, params: any[][]): ReflectiveDependency {
   let token: any = null;
   let optional = false;
 
@@ -197,6 +262,6 @@ function _extractToken(
 }
 
 function _createDependency(
-  token: any, optional: boolean, visibility: Self | SkipSelf | null): ReflectiveDependency {
+    token: any, optional: boolean, visibility: Self | SkipSelf | null): ReflectiveDependency {
   return new ReflectiveDependency(ReflectiveKey.get(token), optional, visibility);
 }

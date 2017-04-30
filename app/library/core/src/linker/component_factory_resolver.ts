@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Injector} from '../di/injector';
 import {Type} from '../type';
 import {stringify} from '../util';
@@ -7,7 +15,7 @@ import {NgModuleRef} from './ng_module_factory';
 
 export function noComponentFactoryError(component: Function) {
   const error = Error(
-    `No component factory found for ${stringify(component)}. Did you add it to @NgModule.entryComponents?`);
+      `No component factory found for ${stringify(component)}. Did you add it to @NgModule.entryComponents?`);
   (error as any)[ERROR_COMPONENT] = component;
   return error;
 }
@@ -37,8 +45,8 @@ export class CodegenComponentFactoryResolver implements ComponentFactoryResolver
   private _factories = new Map<any, ComponentFactory<any>>();
 
   constructor(
-    factories: ComponentFactory<any>[], private _parent: ComponentFactoryResolver,
-    private _ngModule: NgModuleRef<any>) {
+      factories: ComponentFactory<any>[], private _parent: ComponentFactoryResolver,
+      private _ngModule: NgModuleRef<any>) {
     for (let i = 0; i < factories.length; i++) {
       const factory = factories[i];
       this._factories.set(factory.componentType, factory);
@@ -62,9 +70,9 @@ export class ComponentFactoryBoundToModule<C> extends ComponentFactory<C> {
   get outputs() { return this.factory.outputs; }
 
   create(
-    injector: Injector, projectableNodes?: any[][], rootSelectorOrNode?: string|any,
-    ngModule?: NgModuleRef<any>): ComponentRef<C> {
+      injector: Injector, projectableNodes?: any[][], rootSelectorOrNode?: string|any,
+      ngModule?: NgModuleRef<any>): ComponentRef<C> {
     return this.factory.create(
-      injector, projectableNodes, rootSelectorOrNode, ngModule || this.ngModule);
+        injector, projectableNodes, rootSelectorOrNode, ngModule || this.ngModule);
   }
 }

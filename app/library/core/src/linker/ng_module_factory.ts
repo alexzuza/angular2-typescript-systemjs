@@ -1,17 +1,27 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Injector, THROW_IF_NOT_FOUND} from '../di/injector';
+import {Type} from '../type';
+import {stringify} from '../util';
+
+import {ComponentFactory} from './component_factory';
+import {CodegenComponentFactoryResolver, ComponentFactoryBoundToModule, ComponentFactoryResolver} from './component_factory_resolver';
 
 
-
-import { Injector, THROW_IF_NOT_FOUND } from '../di/injector';
-import { stringify } from '../util';
-import { Type } from '../type';
-import { ComponentFactory } from './component_factory';
-import {
-  CodegenComponentFactoryResolver, ComponentFactoryBoundToModule,
-  ComponentFactoryResolver
-} from './component_factory_resolver';
-
-const _UNDEFINED = new Object();
-
+/**
+ * Represents an instance of an NgModule created via a {@link NgModuleFactory}.
+ *
+ * `NgModuleRef` provides access to the NgModule Instance as well other objects related to this
+ * NgModule Instance.
+ *
+ * @stable
+ */
 export abstract class NgModuleRef<T> {
   /**
    * The injector that contains all of the providers of the NgModule.
@@ -40,10 +50,13 @@ export abstract class NgModuleRef<T> {
   abstract onDestroy(callback: () => void): void;
 }
 
+/**
+ * @experimental
+ */
 export class NgModuleFactory<T> {
   constructor(
-    private _injectorClass: {new (parentInjector: Injector): NgModuleInjector<T>},
-    private _moduleType: Type<T>) {}
+      private _injectorClass: {new (parentInjector: Injector): NgModuleInjector<T>},
+      private _moduleType: Type<T>) {}
 
   get moduleType(): Type<T> { return this._moduleType; }
 
@@ -54,6 +67,8 @@ export class NgModuleFactory<T> {
   }
 }
 
+const _UNDEFINED = new Object();
+
 export abstract class NgModuleInjector<T> implements Injector, NgModuleRef<T> {
   bootstrapFactories: ComponentFactory<any>[];
   instance: T;
@@ -63,12 +78,12 @@ export abstract class NgModuleInjector<T> implements Injector, NgModuleRef<T> {
   private _cmpFactoryResolver: CodegenComponentFactoryResolver;
 
   constructor(
-    public parent: Injector, factories: ComponentFactory<any>[],
-    bootstrapFactories: ComponentFactory<any>[]) {
+      public parent: Injector, factories: ComponentFactory<any>[],
+      bootstrapFactories: ComponentFactory<any>[]) {
     this.bootstrapFactories =
-      bootstrapFactories.map(f => new ComponentFactoryBoundToModule(f, this));
+        bootstrapFactories.map(f => new ComponentFactoryBoundToModule(f, this));
     this._cmpFactoryResolver = new CodegenComponentFactoryResolver(
-      factories, parent.get(ComponentFactoryResolver, ComponentFactoryResolver.NULL), this);
+        factories, parent.get(ComponentFactoryResolver, ComponentFactoryResolver.NULL), this);
   }
 
   create() { this.instance = this.createInternal(); }
@@ -97,7 +112,7 @@ export abstract class NgModuleInjector<T> implements Injector, NgModuleRef<T> {
   destroy(): void {
     if (this._destroyed) {
       throw new Error(
-        `The ng module ${stringify(this.instance.constructor)} has already been destroyed.`);
+          `The ng module ${stringify(this.instance.constructor)} has already been destroyed.`);
     }
     this._destroyed = true;
     this.destroyInternal();

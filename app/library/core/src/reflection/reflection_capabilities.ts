@@ -1,62 +1,72 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
+import {Type, isType} from '../type';
+import {global, stringify} from '../util';
+import {PlatformReflectionCapabilities} from './platform_reflection_capabilities';
+import {GetterFn, MethodFn, SetterFn} from './types';
 
-import { PlatformReflectionCapabilities } from './platform_reflection_capabilities';
-import { global } from '../util';
-import { isType, Type } from '../type';
-import { GetterFn, MethodFn, SetterFn } from './types';
-
+/**
+ * Attention: This regex has to hold even if the code is minified!
+ */
 export const DELEGATE_CTOR = /^function\s+\S+\(\)\s*{[\s\S]+\.apply\(this,\s*arguments\)/;
 
 export class ReflectionCapabilities implements PlatformReflectionCapabilities {
   private _reflect: any;
 
-  constructor(reflect?: any) {
-    this._reflect = reflect || global['Reflect'];
-  }
+  constructor(reflect?: any) { this._reflect = reflect || global['Reflect']; }
 
-  isReflectionEnabled(): boolean {
-    return true;
-  }
+  isReflectionEnabled(): boolean { return true; }
 
-  factory<T>(t: Type<T>): (args: any[]) => T {
-    return (...args: any[]) => new t(...args);
-  }
+  factory<T>(t: Type<T>): (args: any[]) => T { return (...args: any[]) => new t(...args); }
 
+  /** @internal */
   _zipTypesAndAnnotations(paramTypes: any[], paramAnnotations: any[]): any[][] {
     let result: any[][];
 
-    if(typeof paramTypes === 'undefined') {
+    if (typeof paramTypes === 'undefined') {
       result = new Array(paramAnnotations.length);
     } else {
       result = new Array(paramTypes.length);
     }
 
-    for(let i = 0; i < result.length; i++) {
+    for (let i = 0; i < result.length; i++) {
       // TS outputs Object for parameters without types, while Traceur omits
       // the annotations. For now we preserve the Traceur behavior to aid
-      // migration, but this can be revisited/
-      if(typeof paramTypes === 'undefined') {
+      // migration, but this can be revisited.
+      if (typeof paramTypes === 'undefined') {
         result[i] = [];
       } else if (paramTypes[i] != Object) {
         result[i] = [paramTypes[i]];
       } else {
         result[i] = [];
       }
-
-      if(paramAnnotations && paramAnnotations[i] != null) {
+      if (paramAnnotations && paramAnnotations[i] != null) {
         result[i] = result[i].concat(paramAnnotations[i]);
       }
     }
     return result;
   }
 
-  _ownParameters(type: Type<any>, parentCtor: any): any[][] | null {
+  private _ownParameters(type: Type<any>, parentCtor: any): any[][]|null {
+    // If we have no decorators, we only have function.length as metadata.
+    // In that case, to detect whether a child class declared an own constructor or not,
+    // we need to look inside of that constructor to check whether it is
+    // just calling the parent.
+    // This also helps to work around for https://github.com/Microsoft/TypeScript/issues/12439
+    // that sets 'design:paramtypes' to []
+    // if a class inherits from another class but has no ctor declared itself.
     if (DELEGATE_CTOR.exec(type.toString())) {
       return null;
     }
 
-    // Prefer the direct API
-    if((<any>type).parameters && (<any>type).parameters !== parentCtor.parameters()) {
+    // Prefer the direct API.
+    if ((<any>type).parameters && (<any>type).parameters !== parentCtor.parameters) {
       return (<any>type).parameters;
     }
 
@@ -66,11 +76,11 @@ export class ReflectionCapabilities implements PlatformReflectionCapabilities {
       // Newer tsickle uses a function closure
       // Retain the non-function case for compatibility with older tsickle
       const ctorParameters =
-        typeof tsickleCtorParams === 'function' ? tsickleCtorParams() : tsickleCtorParams;
+          typeof tsickleCtorParams === 'function' ? tsickleCtorParams() : tsickleCtorParams;
       const paramTypes = ctorParameters.map((ctorParam: any) => ctorParam && ctorParam.type);
       const paramAnnotations = ctorParameters.map(
-        (ctorParam: any) =>
-        ctorParam && convertTsickleDecoratorIntoMetadata(ctorParam.decorators));
+          (ctorParam: any) =>
+              ctorParam && convertTsickleDecoratorIntoMetadata(ctorParam.decorators));
       return this._zipTypesAndAnnotations(paramTypes, paramAnnotations);
     }
 
@@ -90,69 +100,139 @@ export class ReflectionCapabilities implements PlatformReflectionCapabilities {
     return new Array((<any>type.length)).fill(undefined);
   }
 
-  parameters(type: Type<any>): any[] {
-    if(!isType(type)) {
+  parameters(type: Type<any>): any[][] {
+    // Note: only report metadata if we have at least one class decorator
+    // to stay in sync with the static reflector.
+    if (!isType(type)) {
       return [];
     }
     const parentCtor = getParentCtor(type);
     let parameters = this._ownParameters(type, parentCtor);
-    if(!parameters && parentCtor !== Object) {
+    if (!parameters && parentCtor !== Object) {
       parameters = this.parameters(parentCtor);
     }
-
     return parameters || [];
   }
 
+  private _ownAnnotations(typeOrFunc: Type<any>, parentCtor: any): any[]|null {
+    // Prefer the direct API.
+    if ((<any>typeOrFunc).annotations && (<any>typeOrFunc).annotations !== parentCtor.annotations) {
+      let annotations = (<any>typeOrFunc).annotations;
+      if (typeof annotations === 'function' && annotations.annotations) {
+        annotations = annotations.annotations;
+      }
+      return annotations;
+    }
+
+    // API of tsickle for lowering decorators to properties on the class.
+    if ((<any>typeOrFunc).decorators && (<any>typeOrFunc).decorators !== parentCtor.decorators) {
+      return convertTsickleDecoratorIntoMetadata((<any>typeOrFunc).decorators);
+    }
+
+    // API for metadata created by invoking the decorators.
+    if (this._reflect && this._reflect.getOwnMetadata) {
+      return this._reflect.getOwnMetadata('annotations', typeOrFunc);
+    }
+    return null;
+  }
+
+  annotations(typeOrFunc: Type<any>): any[] {
+    if (!isType(typeOrFunc)) {
+      return [];
+    }
+    const parentCtor = getParentCtor(typeOrFunc);
+    const ownAnnotations = this._ownAnnotations(typeOrFunc, parentCtor) || [];
+    const parentAnnotations = parentCtor !== Object ? this.annotations(parentCtor) : [];
+    return parentAnnotations.concat(ownAnnotations);
+  }
+
+  private _ownPropMetadata(typeOrFunc: any, parentCtor: any): {[key: string]: any[]}|null {
+    // Prefer the direct API.
+    if ((<any>typeOrFunc).propMetadata &&
+        (<any>typeOrFunc).propMetadata !== parentCtor.propMetadata) {
+      let propMetadata = (<any>typeOrFunc).propMetadata;
+      if (typeof propMetadata === 'function' && propMetadata.propMetadata) {
+        propMetadata = propMetadata.propMetadata;
+      }
+      return propMetadata;
+    }
+
+    // API of tsickle for lowering decorators to properties on the class.
+    if ((<any>typeOrFunc).propDecorators &&
+        (<any>typeOrFunc).propDecorators !== parentCtor.propDecorators) {
+      const propDecorators = (<any>typeOrFunc).propDecorators;
+      const propMetadata = <{[key: string]: any[]}>{};
+      Object.keys(propDecorators).forEach(prop => {
+        propMetadata[prop] = convertTsickleDecoratorIntoMetadata(propDecorators[prop]);
+      });
+      return propMetadata;
+    }
+
+    // API for metadata created by invoking the decorators.
+    if (this._reflect && this._reflect.getOwnMetadata) {
+      return this._reflect.getOwnMetadata('propMetadata', typeOrFunc);
+    }
+    return null;
+  }
+
+  propMetadata(typeOrFunc: any): {[key: string]: any[]} {
+    if (!isType(typeOrFunc)) {
+      return {};
+    }
+    const parentCtor = getParentCtor(typeOrFunc);
+    const propMetadata: {[key: string]: any[]} = {};
+    if (parentCtor !== Object) {
+      const parentPropMetadata = this.propMetadata(parentCtor);
+      Object.keys(parentPropMetadata).forEach((propName) => {
+        propMetadata[propName] = parentPropMetadata[propName];
+      });
+    }
+    const ownPropMetadata = this._ownPropMetadata(typeOrFunc, parentCtor);
+    if (ownPropMetadata) {
+      Object.keys(ownPropMetadata).forEach((propName) => {
+        const decorators: any[] = [];
+        if (propMetadata.hasOwnProperty(propName)) {
+          decorators.push(...propMetadata[propName]);
+        }
+        decorators.push(...ownPropMetadata[propName]);
+        propMetadata[propName] = decorators;
+      });
+    }
+    return propMetadata;
+  }
+
   hasLifecycleHook(type: any, lcProperty: string): boolean {
-    // todo
-    return true;
+    return type instanceof Type && lcProperty in type.prototype;
   }
 
-  annotations(type: Type<any>): any[] {
-    // todo
-    return [];
-  }
-
-  propMetadata(typeOrFunc: Type<any>): { [p: string]: any[] } {
-    // todo
-    return {};
-  }
-
-  getter(name: string): GetterFn {
-    // todo
-    return () => {};
-  }
+  getter(name: string): GetterFn { return <GetterFn>new Function('o', 'return o.' + name + ';'); }
 
   setter(name: string): SetterFn {
-    // todo
-    return () => {};
+    return <SetterFn>new Function('o', 'v', 'return o.' + name + ' = v;');
   }
 
   method(name: string): MethodFn {
-    return () => {};
+    const functionBody = `if (!o.${name}) throw new Error('"${name}" is undefined');
+        return o.${name}.apply(o, args);`;
+    return <MethodFn>new Function('o', 'args', functionBody);
   }
 
-  importUri(type: Type<any>): string {
-    // todo
-    return '';
+  // There is not a concept of import uri in Js, but this is useful in developing Dart applications.
+  importUri(type: any): string {
+    // StaticSymbol
+    if (typeof type === 'object' && type['filePath']) {
+      return type['filePath'];
+    }
+    // Runtime type
+    return `./${stringify(type)}`;
   }
 
-  resourceUri(type: Type<any>): string {
-    // todo
-    return '';
+  resourceUri(type: any): string { return `./${stringify(type)}`; }
+
+  resolveIdentifier(name: string, moduleUrl: string, members: string[], runtime: any): any {
+    return runtime;
   }
-
-  resolveIdentifier(name: string, moduleId: string, members: string[] | any, runtime: any): any {
-    // todo
-    return undefined;
-  }
-
-  resolveEnum(enumIdentifier: any, name: string): any {
-    // todo
-    return undefined;
-  }
-
-
+  resolveEnum(enumIdentifier: any, name: string): any { return enumIdentifier[name]; }
 }
 
 function convertTsickleDecoratorIntoMetadata(decoratorInvocations: any[]): any[] {
@@ -170,7 +250,7 @@ function convertTsickleDecoratorIntoMetadata(decoratorInvocations: any[]): any[]
 function getParentCtor(ctor: Function): Type<any> {
   const parentProto = Object.getPrototypeOf(ctor.prototype);
   const parentCtor = parentProto ? parentProto.constructor : null;
-  // Note: we always use `Object` as the null value
+  // Note: We always use `Object` as the null value
   // to simplify checking later on.
   return parentCtor || Object;
 }

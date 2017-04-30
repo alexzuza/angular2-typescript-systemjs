@@ -1,5 +1,3 @@
-/// <reference path="../../../../../node_modules/zone.js/dist/zone.js.d.ts" />
-
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -240,18 +238,18 @@ export class NgZone {
       },
 
       onHasTask:
-        (delegate: ZoneDelegate, current: Zone, target: Zone, hasTaskState: HasTaskState) => {
-          delegate.hasTask(target, hasTaskState);
-          if (current === target) {
-            // We are only interested in hasTask events which originate from our zone
-            // (A child hasTask event is not interesting to us)
-            if (hasTaskState.change == 'microTask') {
-              this.setHasMicrotask(hasTaskState.microTask);
-            } else if (hasTaskState.change == 'macroTask') {
-              this.setHasMacrotask(hasTaskState.macroTask);
+          (delegate: ZoneDelegate, current: Zone, target: Zone, hasTaskState: HasTaskState) => {
+            delegate.hasTask(target, hasTaskState);
+            if (current === target) {
+              // We are only interested in hasTask events which originate from our zone
+              // (A child hasTask event is not interesting to us)
+              if (hasTaskState.change == 'microTask') {
+                this.setHasMicrotask(hasTaskState.microTask);
+              } else if (hasTaskState.change == 'macroTask') {
+                this.setHasMacrotask(hasTaskState.macroTask);
+              }
             }
-          }
-        },
+          },
 
       onHandleError: (delegate: ZoneDelegate, current: Zone, target: Zone, error: any): boolean => {
         delegate.handleError(target, error);

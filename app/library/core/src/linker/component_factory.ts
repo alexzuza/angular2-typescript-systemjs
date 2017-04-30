@@ -1,13 +1,32 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-import { Injector } from '../di/injector';
-import { Type } from '../type';
-import { NgModuleRef } from './ng_module_factory';
+import {ChangeDetectorRef} from '../change_detection/change_detection';
+import {Injector} from '../di/injector';
+import {Type} from '../type';
 
+import {ElementRef} from './element_ref';
+import {NgModuleRef} from './ng_module_factory';
+import {ViewRef} from './view_ref';
+
+/**
+ * Represents an instance of a Component created via a {@link ComponentFactory}.
+ *
+ * `ComponentRef` provides access to the Component Instance as well other objects related to this
+ * Component Instance and allows you to destroy the Component Instance via the {@link #destroy}
+ * method.
+ * @stable
+ */
 export abstract class ComponentRef<C> {
   /**
    * Location of the Host Element of this Component Instance.
    */
-  //abstract get location(): ElementRef;
+  abstract get location(): ElementRef;
 
   /**
    * The injector on which the component instance exists.
@@ -22,12 +41,12 @@ export abstract class ComponentRef<C> {
   /**
    * The {@link ViewRef} of the Host View of this Component instance.
    */
-  //abstract get hostView(): ViewRef;
+  abstract get hostView(): ViewRef;
 
   /**
    * The {@link ChangeDetectorRef} of the Component instance.
    */
-  //abstract get changeDetectorRef(): ChangeDetectorRef;
+  abstract get changeDetectorRef(): ChangeDetectorRef;
 
   /**
    * The component type.
@@ -45,6 +64,9 @@ export abstract class ComponentRef<C> {
   abstract onDestroy(callback: Function): void;
 }
 
+/**
+ * @stable
+ */
 export abstract class ComponentFactory<C> {
   abstract get selector(): string;
   abstract get componentType(): Type<any>;
@@ -64,6 +86,6 @@ export abstract class ComponentFactory<C> {
    * Creates a new component.
    */
   abstract create(
-    injector: Injector, projectableNodes?: any[][], rootSelectorOrNode?: string|any,
-    ngModule?: NgModuleRef<any>): ComponentRef<C>;
+      injector: Injector, projectableNodes?: any[][], rootSelectorOrNode?: string|any,
+      ngModule?: NgModuleRef<any>): ComponentRef<C>;
 }
