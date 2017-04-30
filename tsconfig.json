@@ -6,9 +6,16 @@
     "sourceMap": true,
     "lib": [ "es2015", "dom" ],
     "outDir": "dist",
+    "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "@zuz/compiler": ["app/library/compiler/index"],
+      "@zuz/core": ["app/library/core/index"],
+      "@zuz/platform-browser-dynamic": ["app/library/platform-browser-dynamic"]
+    }
   }
 }

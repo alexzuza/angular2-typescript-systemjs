@@ -1,0 +1,202 @@
+
+import { ClassProvider, ExistingProvider, FactoryProvider, Provider, TypeProvider, ValueProvider } from './provider';
+import { Type } from '../type';
+import {
+  invalidProviderError, mixingMultiProvidersWithRegularProvidersError,
+  noAnnotationError
+} from './reflective_errors';
+import { ReflectiveKey } from './reflective_key';
+import { resolveForwardRef } from './forward_ref';
+import { reflector } from '../reflection/reflection';
+import { Inject, Optional, Self, SkipSelf } from './metadata';
+import { InjectionToken } from './injection_token';
+
+interface NormalizedProvider extends TypeProvider, ValueProvider, ClassProvider, ExistingProvider,
+  FactoryProvider {}
+
+export class ReflectiveDependency {
+  constructor(
+    public key: ReflectiveKey, public optional: boolean, public visibility: Self|SkipSelf|null) {}
+
+  static fromKey(key: ReflectiveKey): ReflectiveDependency {
+    return new ReflectiveDependency(key, false, null);
+  }
+}
+
+const _EMPTY_LIST: any[] = [];
+
+export interface ResolvedReflectiveProvider {
+  key: ReflectiveKey;
+
+  resolvedFactories: ResolvedReflectiveFactory[];
+
+  multiProvider: boolean;
+}
+
+export class ResolvedReflectiveProvider_ implements ResolvedReflectiveProvider {
+  constructor(public key: ReflectiveKey, public resolvedFactories: ResolvedReflectiveFactory[],
+    public  multiProvider: boolean) {}
+
+    get resolvedFactory(): ResolvedReflectiveFactory {
+      return this.resolvedFactories[0];
+    }
+}
+
+export class ResolvedReflectiveFactory {
+  constructor(
+    public factory: Function,
+    public dependencies: ReflectiveDependency[]) {}
+}
+
+function resolveReflectiveFactory(provider: NormalizedProvider): ResolvedReflectiveFactory {
+  let factoryFn: Function;
+  let resolvedDeps: ReflectiveDependency[];
+  if(provider.useClass) {
+    const useClass = resolveForwardRef(provider.useClass);
+    factoryFn = reflector.factory(useClass);
+    resolvedDeps = _dependenciesFor(useClass);
+  } else if (provider.useExisting) {
+    factoryFn = (aliasInstance: any) => aliasInstance;
+    resolvedDeps = [ReflectiveDependency.fromKey(ReflectiveKey.get(provider.useExisting))];
+  } else if (provider.useFactory) {
+    factoryFn = provider.useFactory;
+    resolvedDeps = constructDependencies(provider.useFactory, provider.deps);
+  } else {
+    factoryFn = () => provider.useValue;
+    resolvedDeps = _EMPTY_LIST;
+  }
+  return new ResolvedReflectiveFactory(factoryFn, resolvedDeps);
+}
+
+function resolveReflectionProvider(provider: NormalizedProvider): ResolvedReflectiveProvider {
+  return new ResolvedReflectiveProvider_(
+    ReflectiveKey.get(provider.provide), [resolveReflectiveFactory(provider)], provider.multi || false);
+}
+
+export function resolveReflectiveProviders(providers: Provider[]): ResolvedReflectiveProvider[] {
+  const normalized = _normalizeProviders(providers, []);
+  const resolved = normalized.map(resolveReflectionProvider);
+  const resolvedProviderMap = mergeResolvedReflectiveProviders(resolved, new Map());
+
+  return Array.from(resolvedProviderMap.values());
+}
+
+/**
+ * Merges a list of ResolvedProviders into a list where
+ * each key is contained exactly once and multi providers
+ * have been merged.
+ */
+export function mergeResolvedReflectiveProviders(providers: ResolvedReflectiveProvider[],
+  normalizedProvidersMap: Map<number, ResolvedReflectiveProvider>): Map<number, ResolvedReflectiveProvider> {
+  for (let i = 0; i < providers.length; i++) {
+    const provider = providers[i];
+    const existing = normalizedProvidersMap.get(provider.key.id);
+    if (existing) {
+      if (provider.multiProvider !== existing.multiProvider) {
+        throw mixingMultiProvidersWithRegularProvidersError(existing, provider);
+      }
+      if (provider.multiProvider) {
+        for (let j = 0; j < provider.resolvedFactories.length; j++) {
+          existing.resolvedFactories.push(provider.resolvedFactories[j]);
+        }
+      } else {
+        normalizedProvidersMap.set(provider.key.id, provider);
+      }
+    } else {
+      let resolvedProvider: ResolvedReflectiveProvider;
+      if (provider.multiProvider) {
+        resolvedProvider = new ResolvedReflectiveProvider_(
+          provider.key, provider.resolvedFactories.slice(), provider.multiProvider);
+      } else {
+        resolvedProvider = provider;
+      }
+      normalizedProvidersMap.set(provider.key.id, resolvedProvider);
+    }
+  }
+  return normalizedProvidersMap;
+}
+
+function _normalizeProviders(providers: Provider[], res: Provider[]): Provider[] {
+  providers.forEach(b => {
+    if(b instanceof Type) {
+      res.push({ provide: b, useClass: b });
+    } else if(b && typeof b == 'object' && (b as any).provide !== undefined) {
+      res.push(b as NormalizedProvider)
+    } else if(b instanceof Array) {
+      _normalizeProviders(b, res);
+    } else {
+      throw invalidProviderError(b);
+    }
+  });
+
+  return res;
+}
+
+export function constructDependencies(
+  typeOrFunc: any, dependencies?: any[]): ReflectiveDependency[] {
+  if (!dependencies) {
+    return _dependenciesFor(typeOrFunc);
+  } else {
+    const params: any[][] = dependencies.map(t => [t]);
+    return dependencies.map(t => _extractToken(typeOrFunc, t, params));
+  }
+}
+
+function _dependenciesFor(typeOrFunc: any): ReflectiveDependency[] {
+  const params = reflector.parameters(typeOrFunc);
+
+  if(!params) return [];
+  if(params.some(x => x == null)) {
+    throw noAnnotationError(typeOrFunc, params);
+  }
+
+  return params.map(p => _extractToken(typeOrFunc, p, params));
+}
+
+function _extractToken(
+  typeOrFunc: any, metadata: any[] | any, params: any[][]): ReflectiveDependency {
+  let token: any = null;
+  let optional = false;
+
+  if (!Array.isArray(metadata)) {
+    if (metadata instanceof Inject) {
+      return _createDependency(metadata['token'], optional, null);
+    } else {
+      return _createDependency(metadata, optional, null);
+    }
+  }
+
+  let visibility: Self|SkipSelf|null = null;
+
+  for (let i = 0; i < metadata.length; ++i) {
+    const paramMetadata = metadata[i];
+
+    if (paramMetadata instanceof Type) {
+      token = paramMetadata;
+
+    } else if (paramMetadata instanceof Inject) {
+      token = paramMetadata['token'];
+
+    } else if (paramMetadata instanceof Optional) {
+      optional = true;
+
+    } else if (paramMetadata instanceof Self || paramMetadata instanceof SkipSelf) {
+      visibility = paramMetadata;
+    } else if (paramMetadata instanceof InjectionToken) {
+      token = paramMetadata;
+    }
+  }
+
+  token = resolveForwardRef(token);
+
+  if (token != null) {
+    return _createDependency(token, optional, visibility);
+  } else {
+    throw noAnnotationError(typeOrFunc, params);
+  }
+}
+
+function _createDependency(
+  token: any, optional: boolean, visibility: Self | SkipSelf | null): ReflectiveDependency {
+  return new ReflectiveDependency(ReflectiveKey.get(token), optional, visibility);
+}

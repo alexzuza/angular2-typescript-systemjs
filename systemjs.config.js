@@ -22,6 +22,10 @@
       '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
+      '@zuz/compiler': 'dist/library/compiler/index',
+      '@zuz/core': 'dist/library/core/index',
+      '@zuz/platform-browser-dynamic': 'dist/library/platform-browser-dynamic/index',
+
       // other libraries
       'rxjs': 'npm:rxjs'
     },
