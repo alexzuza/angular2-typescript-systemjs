@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Attribute, Component, ContentChild, ContentChildren, Directive, Host, HostBinding, HostListener, Inject, Injectable, Input, NgModule, Optional, Output, Pipe, Self, SkipSelf, ViewChild, ViewChildren, animate, group, keyframes, sequence, state, style, transition, trigger, ɵReflectorReader} from '@angular/core';
+import {Attribute, Component, ContentChild, ContentChildren, Directive, Host, HostBinding, HostListener, Inject, Injectable, Input, NgModule, Optional, Output, Pipe, Self, SkipSelf, ViewChild, ViewChildren, ɵReflectorReader} from '@angular/core';
 
 import {CompileSummaryKind} from '../compile_metadata';
 import {SummaryResolver} from '../summary_resolver';
@@ -317,14 +317,14 @@ export class StaticReflector implements ɵReflectorReader {
     this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'SkipSelf'), SkipSelf);
     this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Optional'), Optional);
 
-    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'trigger'), trigger);
+/*    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'trigger'), trigger);
     this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'state'), state);
     this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'transition'), transition);
     this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'style'), style);
     this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'animate'), animate);
     this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'keyframes'), keyframes);
     this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'sequence'), sequence);
-    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'group'), group);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'group'), group);*/
   }
 
   /**

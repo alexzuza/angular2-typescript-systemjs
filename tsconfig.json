@@ -13,9 +13,11 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "@zuz/compiler": ["app/library/compiler/index"],
-      "@zuz/core": ["app/library/core/index"],
-      "@zuz/platform-browser-dynamic": ["app/library/platform-browser-dynamic"]
+      "@angular/common": ["angular/common"],
+      "@angular/compiler": ["angular/compiler/index"],
+      "@angular/core": ["angular/core/index"],
+      "@angular/platform-browser": ["angular/platform-browser"],
+      "@angular/platform-browser-dynamic": ["angular/platform-browser-dynamic"]
     }
   }
 }

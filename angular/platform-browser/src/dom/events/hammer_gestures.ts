@@ -1,3 +1,4 @@
+
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -11,6 +12,9 @@ import {Inject, Injectable, InjectionToken} from '@angular/core';
 import {DOCUMENT} from '../dom_tokens';
 
 import {EventManagerPlugin} from './event_manager';
+
+declare var Hammer: any;
+declare type HammerInput = {};
 
 const EVENT_NAMES = {
   // pan

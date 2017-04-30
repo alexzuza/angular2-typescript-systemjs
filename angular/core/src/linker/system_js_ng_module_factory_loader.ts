@@ -1,3 +1,4 @@
+declare var System: any;
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.

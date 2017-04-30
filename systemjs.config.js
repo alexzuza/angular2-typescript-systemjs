@@ -4,6 +4,7 @@
  */
 (function (global) {
   System.config({
+    "defaultJSExtensions": true,
     paths: {
       // paths serve as alias
       'npm:': 'node_modules/'
@@ -11,20 +12,14 @@
     // map tells the System loader where to look for things
     map: {
       // our app is within the app folder
-      app: 'dist',
+      app: 'dist/app',
       // angular bundles
-      '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
-      '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
-      '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
-      '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.js',
-      '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
-      '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
-      '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
-      '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
+      '@angular/core': 'dist/angular/core/index',
+      '@angular/common': 'dist/angular/common/index',
+      '@angular/compiler': 'dist/angular/compiler/index',
+      '@angular/platform-browser': 'dist/angular/platform-browser/index',
+      '@angular/platform-browser-dynamic': 'dist/angular/platform-browser-dynamic/index',
 
-      '@zuz/compiler': 'dist/library/compiler/index',
-      '@zuz/core': 'dist/library/core/index',
-      '@zuz/platform-browser-dynamic': 'dist/library/platform-browser-dynamic/index',
 
       // other libraries
       'rxjs': 'npm:rxjs'

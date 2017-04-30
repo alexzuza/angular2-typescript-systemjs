@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, OnDestroy} from '@zuz/core';
+import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {getDOM} from './dom_adapter';
 import {DOCUMENT} from './dom_tokens';
 

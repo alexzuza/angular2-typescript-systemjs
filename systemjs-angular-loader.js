@@ -16,11 +16,11 @@ module.exports.translate = function(load){
   baseHref = baseHref.pathname;
 
   basePath = basePath.replace(baseHref, '');
-  basePath = basePath.replace('dist', 'app')
+  basePath = basePath.replace('dist/app', 'app');
 
   load.source = load.source
     .replace(templateUrlRegex, function(match, quote, url){
-      let resolvedUrl = url;
+      var resolvedUrl = url;
 
       if (url.startsWith('.')) {
         resolvedUrl = basePath + url.substr(1);
