@@ -1,3 +1,4 @@
+/// <reference path="../../../../node_modules/zone.js/dist/zone.js.d.ts" />
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
