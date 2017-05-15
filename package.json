@@ -5,7 +5,8 @@
     "start": "rimraf dist && tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "tsc:w": "tsc -w",
+    "ngc": "ngc -p tsconfig-aot.json"
   },
   "license": "ISC",
   "dependencies": {
