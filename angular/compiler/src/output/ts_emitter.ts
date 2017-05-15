@@ -129,6 +129,12 @@ class _TsEmitterVisitor extends AbstractEmitterVisitor implements o.TypeVisitor 
     return null;
   }
 
+  visitAssertNotNullExpr(ast: o.AssertNotNull, ctx: EmitterVisitorContext): any {
+    const result = super.visitAssertNotNullExpr(ast, ctx);
+    ctx.print(ast, '!');
+    return result;
+  }
+
   visitDeclareVarStmt(stmt: o.DeclareVarStmt, ctx: EmitterVisitorContext): any {
     if (ctx.isExportedVar(stmt.name) && stmt.value instanceof o.ExternalExpr && !stmt.type) {
       // check for a reexport
@@ -392,7 +398,7 @@ class _TsEmitterVisitor extends AbstractEmitterVisitor implements o.TypeVisitor 
     if (filePath != this._genFilePath) {
       let prefix = this.importsWithPrefixes.get(filePath);
       if (prefix == null) {
-        prefix = `import${this.importsWithPrefixes.size}`;
+        prefix = `i${this.importsWithPrefixes.size}`;
         this.importsWithPrefixes.set(filePath, prefix);
       }
       ctx.print(null, `${prefix}.`);
