@@ -10,9 +10,5 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false
-  },
-
-  "files": [
-    "app/main.ts"
-  ]
+  }
 }
