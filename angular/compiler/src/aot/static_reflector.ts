@@ -304,6 +304,14 @@ export class StaticReflector implements CompileReflector {
     this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'SkipSelf'), SkipSelf);
     this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Optional'), Optional);
 
+/*    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'trigger'), trigger);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'state'), state);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'transition'), transition);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'style'), style);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'animate'), animate);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'keyframes'), keyframes);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'sequence'), sequence);
+    this._registerFunction(this.findDeclaration(ANGULAR_CORE, 'group'), group);*/
   }
 
   /**
