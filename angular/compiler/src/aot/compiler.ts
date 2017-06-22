@@ -35,7 +35,8 @@ export class AotCompiler {
       private _viewCompiler: ViewCompiler, private _ngModuleCompiler: NgModuleCompiler,
       private _outputEmitter: OutputEmitter,
       private _summaryResolver: SummaryResolver<StaticSymbol>, private _localeId: string|null,
-      private _translationFormat: string|null, private _symbolResolver: StaticSymbolResolver) {}
+      private _translationFormat: string|null, private _enableSummariesForJit: boolean|null,
+      private _symbolResolver: StaticSymbolResolver) {}
 
   clearCache() { this._metadataResolver.clearCache(); }
 
@@ -204,10 +205,12 @@ export class AotCompiler {
             o.StmtModifier.Exported
           ]));
     });
-    return [
-      new GeneratedFile(srcFileUrl, summaryFileName(srcFileUrl), json),
-      this._codegenSourceModule(srcFileUrl, forJitOutputCtx)
-    ];
+    const summaryJson = new GeneratedFile(srcFileUrl, summaryFileName(srcFileUrl), json);
+    if (this._enableSummariesForJit) {
+      return [summaryJson, this._codegenSourceModule(srcFileUrl, forJitOutputCtx)];
+    };
+
+    return [summaryJson];
   }
 
   private _compileModule(outputCtx: OutputContext, ngModuleType: StaticSymbol): void {
@@ -301,7 +304,10 @@ export class AotCompiler {
       }
       const arity = this._symbolResolver.getTypeArity(symbol) || 0;
       const {filePath, name, members} = this._symbolResolver.getImportAs(symbol) || symbol;
-      const moduleName = this._symbolResolver.fileNameToModuleName(filePath, genFilePath);
+      const importModule = this._symbolResolver.fileNameToModuleName(filePath, genFilePath);
+      const selfReference = this._symbolResolver.fileNameToModuleName(genFilePath, genFilePath);
+      const moduleName = importModule === selfReference ? null : importModule;
+
       // If we are in a type expression that refers to a generic type then supply
       // the required type parameters. If there were not enough type parameters
       // supplied, supply any as the type. Outside a type expression the reference
