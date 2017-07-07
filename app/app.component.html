@@ -1,1 +1,11 @@
-<h1>Hooray</h1>
+<h1 class="kanban-title">Kanban board <button class="reset-store" (click)="reset()">Reset store</button></h1>
+<kanban
+    [lanes]="lanes$ | async"
+    (laneMoved)="onLaneMoved($event)"
+    (laneEdited)="onLaneEdited($event)"
+    (createNote)="onNoteCreated($event)"
+    (noteEdited)="onNoteEdited($event)"
+    (noteMoved)="onNoteMoved($event)"
+    (noteDeleted)="onNoteDeleted($event)"
+    (noteStatusChanged)="onNotesStatusChanged($event)"
+></kanban>

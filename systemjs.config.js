@@ -27,6 +27,9 @@
       '@angular/platform-browser/animations': 'npm:@angular/platform-browser/bundles/platform-browser-animations.umd.js',
       '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
 
+      'dragula': 'npm:dragula/dist/dragula.js',
+      'localforage': 'npm:localforage/dist/localforage.js',
+      'angular2-uuid': 'npm:angular2-uuid/index.js',
       // other libraries
       'rxjs': 'npm:rxjs'
     },
