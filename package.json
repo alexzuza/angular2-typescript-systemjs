@@ -4,9 +4,10 @@
   "scripts": {
     "start": "rimraf dist && tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
+    "lite:aot": "lite-server -c bs-config.aot.json",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "ngc": "ngc -p tsconfig-aot.json"
+    "aot": "rimraf dist && rimraf aot && concurrently \"ngc -p tsconfig-aot.json\" \"npm run lite:aot\""
   },
   "license": "ISC",
   "dependencies": {

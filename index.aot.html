@@ -12,12 +12,12 @@
   <script src="node_modules/zone.js/dist/zone.js"></script>
   <script src="node_modules/systemjs/dist/system.src.js"></script>
   <!-- 2. Configure SystemJS -->
-  <script src="systemjs.config.js"></script>
+  <script src="systemjs.config.aot.js"></script>
   <script>
     System.import('app').catch(function (err) { console.error(err); });
   </script>
 </head>
-  <body>
-    <my-app>Loading...</my-app>
-  </body>
+<body>
+<my-app>Loading...</my-app>
+</body>
 </html>
