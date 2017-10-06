@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "aot": "rimraf dist && rimraf aot && concurrently \"ngc -p tsconfig-aot.json --watch\" \"npm run lite:aot\"",
-    "debug": "node --inspect-brk ./node_modules/@angular/compiler-cli/src/main.js -p tsconfig-aot.json"
+    "ngc": "ngc -p tsconfig-aot.json"
   },
   "license": "ISC",
   "dependencies": {
