@@ -42,7 +42,8 @@
       '@angular/cdk/table': 'npm:@angular/cdk/bundles/cdk-table.umd.js',
       '@angular/cdk/stepper': 'npm:@angular/cdk/bundles/cdk-stepper.umd.js',
       // other libraries
-      'rxjs': 'npm:rxjs'
+      'rxjs': 'npm:rxjs',
+      'rxjs/operators': 'npm:rxjs/operators'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -55,9 +56,8 @@
           }
         }
       },
-      rxjs: {
-        defaultExtension: 'js'
-      }
+      'rxjs': { main: 'index.js', defaultExtension: 'js' },
+      'rxjs/operators': {main: 'index.js', defaultExtension: 'js' }
     }
   });
 })(this);
